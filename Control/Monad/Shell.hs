@@ -340,11 +340,11 @@ fmt multiline = go
 	go (Or e1 e2) = go e1 <> " || " <> go e2
 	go (Redir e r) = let use t = go e <> " " <> t in case r of
 		(RedirToFile fd f) ->
-			use $ redirFd fd (Just stdOutput) <> "> " <> L.pack f
+			use $ redirFd fd (Just stdOutput) <> "> " <> getQ (quote (L.pack f))
 		(RedirToFileAppend fd f) ->
-			use $ redirFd fd (Just stdOutput) <> ">> " <> L.pack f
+			use $ redirFd fd (Just stdOutput) <> ">> " <> getQ (quote (L.pack f))
 		(RedirFromFile fd f) ->
-			use $ redirFd fd (Just stdInput) <> "< " <> L.pack f
+			use $ redirFd fd (Just stdInput) <> "< " <> getQ (quote (L.pack f))
 		(RedirOutput fd1 fd2) ->
 			use $ redirFd fd1 (Just stdOutput) <> ">&" <> showFd fd2
 		(RedirInput fd1 fd2) ->

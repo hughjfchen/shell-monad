@@ -1,3 +1,10 @@
+shell-monad (0.6.10) UNRELEASED; urgency=medium
+
+  * Quote filenames in redirections as necessary to support spaces
+    and other problem characters.
+
+ -- Joey Hess <id@joeyh.name>  Mon, 07 Mar 2022 14:16:23 -0400
+
 shell-monad (0.6.9) unstable; urgency=medium
 
   * Prepare for monad of no return, by removing redundant return
