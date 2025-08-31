@@ -1,7 +1,7 @@
+Cabal-Version: 2.4
 Name: shell-monad
 Version: 0.6.10
-Cabal-Version: >= 1.10
-License: BSD3
+License: BSD-3-Clause
 Maintainer: Joey Hess <id@joeyh.name>
 Author: Joey Hess
 Stability: Stable
@@ -26,7 +26,10 @@ Library
   Exposed-Modules:
     Control.Monad.Shell
     Control.Monad.Shell.Quote
-  Build-Depends: base (>= 4.11 && < 5), containers, text, unix
+  Build-Depends: base >= 4.11 && < 5
+               , containers
+               , text
+               , unix
 
 source-repository head
   type: git
