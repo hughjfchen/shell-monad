@@ -5,7 +5,9 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 
 -- | This is a shell monad, for generating shell scripts.
 --
@@ -265,7 +267,7 @@ newtype Script a = Script (Env -> ([Expr], Env, a))
   deriving (Functor)
 
 instance Applicative Script where
-  pure a = Script $ \env -> ([], env, a)
+  pure a = Script ([],,a)
   Script f <*> Script a = Script $ \env0 ->
     let (expr1, env1, f') = f env0
         (expr2, env2, a') = a env1
@@ -443,10 +445,10 @@ run :: L.Text -> [L.Text] -> Script ()
 run c ps = add $ newCmd $ L.intercalate " " (map (getQ . quote) (c : ps))
 
 newCmd :: L.Text -> Expr
-newCmd l = Cmd 0 [] l
+newCmd = Cmd 0 []
 
 raw :: L.Text -> Expr
-raw l = Raw 0 l
+raw = Raw 0
 
 -- | Variadic and polymorphic version of 'run'
 --
@@ -548,7 +550,7 @@ data WithVar a = WithVar (Term Var a) (Quoted L.Text -> Quoted L.Text)
 
 -- | Adds an Expr to the script.
 add :: Expr -> Script ()
-add expr = Script $ \env -> ([expr], env, ())
+add expr = Script ([expr],,())
 
 -- | Adds a comment that is embedded in the generated shell script.
 comment :: L.Text -> Script ()
@@ -600,7 +602,7 @@ newVar = newVarContaining' ""
 newVarContaining' :: (NameHinted namehint) => L.Text -> namehint -> Script (Term Var t)
 newVarContaining' value = hinted $ \namehint -> do
   v <- newVarUnsafe namehint
-  Script $ \env -> ([raw (getName v <> "=" <> value)], env, v)
+  Script ([raw (getName v <> "=" <> value)],,v)
 
 -- | Creates a new shell variable with an initial value coming from any
 -- 'Param'.
@@ -676,7 +678,7 @@ positionalParameters = simpleVar (VarName "@")
 takeParameter :: (NameHinted namehint) => forall a. namehint -> Script (Term Var a)
 takeParameter = hinted $ \namehint -> do
   p <- newVarUnsafe namehint
-  Script $ \env -> ([raw (getName p <> "=\"$1\""), raw "shift"], env, p)
+  Script ([raw (getName p <> "=\"$1\""), raw "shift"],,p)
 
 -- | Creates a new shell variable, but does not ensure that it's not
 -- already set to something. For use when the caller is going to generate
@@ -838,7 +840,7 @@ func h s = flip hinted h $ \namehint -> Script $ \env ->
 
     genfuncname = maybe "p" (L.filter isAlpha)
 
-    definefunc (Func f) ls = (raw $ f <> " () { :") : map indent ls ++ [raw "}"]
+    definefunc (Func f) ls = raw (f <> " () { :") : map indent ls ++ [raw "}"]
 
     callfunc (Func f) = cmd f
 
@@ -986,7 +988,7 @@ stopOnFailure b = add $ raw $ "set " <> (if b then "-" else "+") <> "e"
 ignoreFailure :: Script () -> Script ()
 ignoreFailure s = runM s >>= mapM_ (add . go)
   where
-    go c@(Cmd _ _ _) = Or c true
+    go c@(Cmd {}) = Or c true
     go c@(Raw _ _) = Or c true
     go c@(Comment _) = c
     go (EnvWrap i n localenvs e) = EnvWrap i n localenvs (map go e)
