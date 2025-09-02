@@ -23,6 +23,7 @@ Extra-Source-Files:
 Library
   Default-Language: Haskell2010
   GHC-Options: -Wall -fno-warn-tabs
+  hs-source-dirs:   src
   Exposed-Modules:
     Control.Monad.Shell
     Control.Monad.Shell.Quote
@@ -33,4 +34,4 @@ Library
 
 source-repository head
   type: git
-  location: git://git.joeyh.name/shell-monad.git
+  location: https://github.com/hughjfchen/shell-monad.git
