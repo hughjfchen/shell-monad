@@ -2,3 +2,11 @@ cradle:
   cabal:
     - path: "./src"
       component: "lib:shell-monad"
+    - path: "./examples/hello.hs"
+      component: "shell-monad:exe:hello"
+    - path: "./examples/fib.hs"
+      component: "shell-monad:exe:fib"
+    - path: "./examples/protocol.hs"
+      component: "shell-monad:exe:protocol"
+    - path: "./examples/santa.hs"
+      component: "shell-monad:exe:santa"

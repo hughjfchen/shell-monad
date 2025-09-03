@@ -326,7 +326,7 @@ script :: Script f -> L.Text
 script =
   flip mappend "\n"
     . L.intercalate "\n"
-    . ("#!/bin/sh" :)
+    . ("#!/usr/bin/env sh" :)
     . map (fmt True)
     . gen
 

@@ -15,10 +15,6 @@ Description:
 Extra-Source-Files:
   CHANGELOG
   TODO
-  examples/santa.hs
-  examples/protocol.hs
-  examples/fib.hs
-  examples/hello.hs
 
 Library
   Default-Language: Haskell2010
@@ -31,6 +27,54 @@ Library
                , containers
                , text
                , unix
+
+executable hello
+  Default-Language: Haskell2010
+  hs-source-dirs:      examples
+  main-is:             hello.hs
+  other-modules:       Paths_shell_monad
+  build-depends:       shell-monad
+                     , base >= 4.11 && < 5
+                     , containers
+                     , text
+                     , unix
+  GHC-Options: -Wall -fno-warn-tabs
+
+executable fib
+  Default-Language: Haskell2010
+  hs-source-dirs:      examples
+  main-is:             fib.hs
+  other-modules:       Paths_shell_monad
+  build-depends:       shell-monad
+                     , base >= 4.11 && < 5
+                     , containers
+                     , text
+                     , unix
+  GHC-Options: -Wall -fno-warn-tabs
+
+executable protocol
+  Default-Language: Haskell2010
+  hs-source-dirs:      examples
+  main-is:             protocol.hs
+  other-modules:       Paths_shell_monad
+  build-depends:       shell-monad
+                     , base >= 4.11 && < 5
+                     , containers
+                     , text
+                     , unix
+  GHC-Options: -Wall -fno-warn-tabs
+
+executable santa
+  Default-Language: Haskell2010
+  hs-source-dirs:      examples
+  main-is:             santa.hs
+  other-modules:       Paths_shell_monad
+  build-depends:       shell-monad
+                     , base >= 4.11 && < 5
+                     , containers
+                     , text
+                     , unix
+  GHC-Options: -Wall -fno-warn-tabs
 
 source-repository head
   type: git
